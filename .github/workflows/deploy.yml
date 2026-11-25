@@ -17,8 +17,26 @@ env:
   PUBLIC_PATH: /github_actions/  
 
 jobs: # Секция jobs определяет этапы процесса
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run test
+        run: npm test
  
   deploy:  # Создаётся одна задача deploy, имя может быть любым
+    needs: test
     runs-on: ubuntu-latest # Определяет, в каком окружении будут запущены все команды этой задачи
     steps: # Перечень шагов, команд, которые будут выполнены в этом блоке
       - name: Checkout # Шаг для получения доступа к репозиторию
